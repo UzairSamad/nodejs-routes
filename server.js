@@ -1,15 +1,25 @@
 const express = require("express");
+const members = require("./Member");
+
 const app = express();
 
 Port = process.env.Port || 3000;
 
 app.use(express.json({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    msg: "It Works get route"
-  });
+// Api For Finding Members
+app.get("/:id", (req, res) => {
+  // checking if id exists or not it will return true or false
+  const found = members.some(member => member.id === parseInt(req.param.id));
+
+  if (found) {
+    res.send(members[req.params.id]);
+  } else {
+    res.json({
+      id: req.params.id,
+      msg: "Invalid id"
+    });
+  }
 });
 
 app.post("/", (req, res) => {
